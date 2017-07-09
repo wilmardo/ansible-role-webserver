@@ -1,0 +1,11 @@
+---
+- name: PHP | Set php.ini
+  lineinfile:
+    path: /etc/php.ini
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    insertbefore: EOF
+  with_items:
+    - { regexp: '^cgi.fix_pathinfo=', line: 'cgi.fix_pathinfo=0' }
+    - { regexp: '^expose_php=', line: 'expose_php=off' }
+  notify: restart php-fpm

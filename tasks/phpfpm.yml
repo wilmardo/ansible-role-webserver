@@ -1,0 +1,19 @@
+---
+- name: PHPFPM | Remove php default www pool
+  file:
+    path: /etc/php-fpm.d/www.conf
+    state: absent
+
+- name: PHPFPM | Creating phpfpm pools
+  template:
+    src: phpfpm/production_pool.jinja2
+    dest: "/etc/php-fpm.d/production.conf"
+  notify: restart php-fpm
+
+- name: PHPFPM | Creating phpfpm pools
+  template:
+    src: phpfpm/test_accept_pool.jinja2
+    dest: "/etc/php-fpm.d/{{ item }}.conf"
+  with_items: "{{ webserver_environments }}"
+  when: item != 'production'
+  notify: restart php-fpm

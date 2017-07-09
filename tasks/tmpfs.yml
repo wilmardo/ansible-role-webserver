@@ -1,11 +1,9 @@
 ---
-- name: PAGESPEED | Get tmpfs status of /tmp
+- name: TMPFS | Get tmpfs status of /tmp
   command: systemctl is-enabled tmp.mount
   ignore_errors: yes
   register: nginx_tmp_tmpfs_status
 
-- debug: var=nginx_tmp_tmpfs_status
-
-- name: PAGESPEED | Enable tmpfs on /tmp
+- name: TMPFS | Enable tmpfs on /tmp
   command: systemctl enable tmp.mount
   when: nginx_tmp_tmpfs_status.stdout == "disabled"

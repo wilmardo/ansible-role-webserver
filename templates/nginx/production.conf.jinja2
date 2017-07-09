@@ -1,0 +1,39 @@
+server {
+    listen              80 http2;
+
+    server_name         {{ webserver_domain }};
+    root                /home/production/www/;
+
+    access_log              /home/production/log/nginx/access.log main buffer=16k;
+    error_log               /home/production/log/nginx/error.log warn;
+
+    {% if server_vars is defined %}
+        {{ server_vars }}
+    {% endif %}
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+		include fastcgi_params;
+        fastcgi_intercept_errors on;
+        fastcgi_pass unix:/run/php-fpm-production.sock;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                expires max;
+                log_not_found off;
+    }
+}

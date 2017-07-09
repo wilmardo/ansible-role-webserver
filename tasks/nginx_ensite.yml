@@ -1,0 +1,48 @@
+---
+- name: NGINX_ENSITE | Create sites-available and sites-enabled
+  file:
+    path: "/etc/nginx/{{ item }}"
+    state: directory
+  with_items:
+    - sites-available
+    - sites-enabled
+
+- name: NGINX_ENSITE | Clone nginx_ensite repo
+  git:
+    repo: https://github.com/perusio/nginx_ensite
+    dest: "{{ webserver_nginx_ensite_location }}"
+
+#TODO: look why this is not working properly
+#- name: NGINX_ENSITE | Receive and verify gpg key
+#  command: gpg --keyserver keys.gnupg.net --recv-keys 4D722217 && gpg --verify nginx_ensite.sig
+#  args:
+#    chdir: "{{ webserver_nginx_ensite_location }}"
+
+- name: NGINX_ENSITE | Install nginx_ensite
+  command: make install
+  args:
+    chdir: "{{ webserver_nginx_ensite_location }}"
+
+- name: NGINX_ENSITE | Symlink autocompletion script to bash_completion
+  copy:
+    src: "{{ webserver_nginx_ensite_location }}/bash_completion.d/nginx_ensite"
+    dest: /etc/bash_completion.d/
+    remote_src: yes
+
+#TODO: PR this to nginx_ensite
+- block:
+    - name: INSTALL | Create symlink for taskdctl to standard CentOS $PATH dir
+      file:
+        src: /usr/local/bin/nginx_ensite
+        path: /usr/bin/nginx_ensite
+        state: link
+
+    - name: INSTALL | Create symlink for taskd to standard CentOS $PATH dir
+      file:
+        src: /usr/local/bin/nginx_dissite
+        path: /usr/bin/nginx_dissite
+
+        state: link
+
+  when: ansible_distribution == 'CentOS'
+

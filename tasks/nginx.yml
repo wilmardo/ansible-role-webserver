@@ -1,2 +1,26 @@
 ---
-- name: INSTALL |
+- name: NGINX | Enable EPOLL in nginx.conf
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    line: "use epoll; \n"
+    state: present
+    insertafter: "^events {\n"
+  notify: restart nginx
+
+- name: NGINX | Create production vhost
+  template:
+    src: nginx/production.conf.jinja2
+    dest: "/etc/nginx/sites-available/{{ webserver_domain }}.conf"
+  notify: restart nginx
+
+- name: NGINX | Create test/accept vhost
+  template:
+    src: nginx/test_accept.conf.jinja2
+    dest: "/etc/nginx/sites-available/{{ item }}.{{ webserver_domain }}.conf"
+  with_items: "{{ webserver_environments }}"
+  when: item != 'production'
+  notify: restart nginx
+
+- name: NGINX | Enable created vhosts
+  command: "nginx_ensite {{ webserver_domain }}.conf"
+  with_items: "{{ webserver_environments }} | replace ('production', '') | append('{{ webserver_domain }}')"

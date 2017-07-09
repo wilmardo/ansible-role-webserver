@@ -1,0 +1,20 @@
+[production]
+user = production
+group = production
+listen = /run/php-fpm-production.sock
+listen.owner = nginx
+listen.group = nginx
+listen.mode=0660
+
+pm = dynamic
+pm.max_children = 18
+pm.start_servers = 8
+pm.min_spare_servers = 4
+pm.max_spare_servers = 8
+pm.max_requests = 512
+php_admin_value[memory_limit] = {{ webserver_php_memory_limit }}
+php_admin_value[post_max_size] = {{ webserver_php_post_max_size }}
+php_admin_value[upload_max_filesize] = {{ webserver_php_max_file_size }}
+php_admin_value[error_log] = /home/production/log/php-fpm/error.log
+rlimit_files = 131072
+security.limit_extensions = .php
