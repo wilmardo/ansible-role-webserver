@@ -2,7 +2,7 @@ server {
     listen                  80 http2;
 
     server_name             {{ item }}.{{ webserver_domain }};
-    root                    /home/{{ item }}/www/;
+    root                    /home/{{ item }}/www;
 
     auth_basic              "Basic Auth";
     auth_basic_user_file    /etc/nginx/.htpasswd;
