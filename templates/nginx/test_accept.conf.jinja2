@@ -1,5 +1,5 @@
 server {
-    listen                  80 http2;
+    listen                  80;
 
     server_name             {{ item }}.{{ webserver_domain }};
     root                    /home/{{ item }}/www;
