@@ -1,8 +1,8 @@
 server {
-    listen              80;
+    listen                  80;
 
-    server_name         {{ webserver_domain }};
-    root                /home/production/www;
+    server_name             {{ webserver_domain }};
+    root                    /home/production/www;
 
     access_log              /home/production/log/nginx/access.log main buffer=16k;
     error_log               /home/production/log/nginx/error.log warn;
@@ -29,11 +29,12 @@ server {
     location ~ \.php$ {
 		include fastcgi_params;
         fastcgi_intercept_errors on;
+        fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
         fastcgi_pass unix:/run/php-fpm-production.sock;
     }
 
     location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-                expires max;
-                log_not_found off;
+        expires max;
+        log_not_found off;
     }
 }

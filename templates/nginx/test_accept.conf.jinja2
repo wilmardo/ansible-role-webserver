@@ -32,11 +32,12 @@ server {
     location ~ \.php$ {
 		include fastcgi_params;
         fastcgi_intercept_errors on;
+        fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;s
         fastcgi_pass unix:/run/php-fpm-{{ item }}.sock;
     }
 
     location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-                expires max;
-                log_not_found off;
+        expires max;
+        log_not_found off;
     }
 }
