@@ -1,4 +1,8 @@
 ---
+# Needed packages
+webserver_packages:
+  - git
+
 # Variables for PHP-FPM
 webserver_php_memory_limit: 128M
 webserver_php_post_max_size: 28M
