@@ -35,4 +35,6 @@ galaxy_info:
     - taskdserver
     - todoserver
 
-dependencies: []
+dependencies:
+  - geerlingguy.php
+  - geerlingguy.nginx
