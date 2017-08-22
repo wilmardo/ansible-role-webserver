@@ -1,0 +1,6 @@
+---
+- name: SETUP | Install nessacary packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: webserver_packages
