@@ -3,4 +3,4 @@
   package:
     name: "{{ item }}"
     state: present
-  with_items: webserver_packages
+  with_items: "{{ webserver_packages }}"
