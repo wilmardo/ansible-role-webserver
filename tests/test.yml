@@ -1,6 +1,15 @@
 ---
 - hosts: all
   become: yes
+  vars:
+    webserver_domain: wilmardenouden.nl
+    webserver_environments:
+  - test
+  - production
   roles:
     - role: geerlingguy.nginx
     - role: ansible-role-webserver
+        webserver_domain: example.com
+        webserver_environments:
+          - test
+          - production
